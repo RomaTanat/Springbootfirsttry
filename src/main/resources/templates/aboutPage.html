@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}"> <head>
+    <title th:text="${title}">О нас</title>
+</head>
+<body>
+<div layout:fragment="content"> <h1 class="text-secondary" th:text="${title}">О нас</h1>
+    <p class="lead" th:text="${message}">Уникальное описание</p>
+
+    <div class="alert alert-info mt-4">
+        <p>Этот контент взят из aboutPage.html, но Navbar и Footer пришли из base.html!</p>
+    </div>
+</div>
+</body>
+</html>

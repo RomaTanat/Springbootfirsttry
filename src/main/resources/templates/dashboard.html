@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <title>Личный Кабинет</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">👤 Личный Кабинет</h2>
+            <p>Вы успешно вошли в систему. Эта страница защищена JWT-токеном.</p>
+
+            <button id="testApiButton" class="btn btn-info">Проверить Защищенный API</button>
+
+            <div id="apiResponse" class="mt-3">
+                <p>Результат API-запроса:</p>
+                <pre id="apiData" class="p-3 bg-light border"></pre>
+            </div>
+
+            <button id="logoutButton" class="btn btn-danger mt-3">Выйти</button>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="custom-js">
+    <script>
+        // Получаем токен, сохраненный при входе
+        const token = localStorage.getItem('jwtToken');
+        const apiDataElement = document.getElementById('apiData');
+
+        // Если токена нет, перенаправляем на страницу входа
+        if (!token) {
+            alert('Срок действия сеанса истек или вы не вошли. Перенаправление на вход.');
+            window.location.href = '/login';
+        }
+
+        // 1. Логика проверки защищенного API
+        document.getElementById('testApiButton').addEventListener('click', async function() {
+            apiDataElement.innerText = 'Загрузка...';
+
+            try {
+                // Отправляем запрос на защищенную конечную точку
+                const response = await fetch('/api/test/user', {
+                    method: 'GET',
+                    headers: {
+                        // КРИТИЧЕСКИ ВАЖНО: Добавляем JWT в заголовок Authorization
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    apiDataElement.innerText = JSON.stringify(data, null, 2);
+                    apiDataElement.style.backgroundColor = '#d4edda'; // Зеленый фон успеха
+                } else if (response.status === 401 || response.status === 403) {
+                    apiDataElement.innerText = `Доступ запрещен (${response.status}). Токен недействителен или отсутствует.`;
+                    apiDataElement.style.backgroundColor = '#f8d7da'; // Красный фон ошибки
+                } else {
+                    apiDataElement.innerText = `Ошибка ${response.status}: ${response.statusText}`;
+                    apiDataElement.style.backgroundColor = '#f8d7da';
+                }
+
+            } catch (error) {
+                apiDataElement.innerText = 'Сетевая ошибка при доступе к API: ' + error.message;
+                apiDataElement.style.backgroundColor = '#f8d7da';
+            }
+        });
+
+        // 2. Логика выхода
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('jwtToken');
+            alert('Вы вышли из системы.');
+            window.location.href = '/login';
+        });
+
+        // Автоматическая проверка при загрузке
+        document.getElementById('testApiButton').click();
+    </script>
+</th:block>
+</body>
+</html>

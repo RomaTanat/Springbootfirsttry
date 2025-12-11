@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}"> <head>
+    <title th:text="${title}">Контакты</title>
+</head>
+<body>
+<div layout:fragment="content"> <div class="row">
+    <div class="col-md-12 mb-4">
+        <h1 class="text-primary" th:text="${title}">Контакты</h1>
+        <p class="lead" th:text="${message}">Мы всегда рады вашим вопросам и предложениям.</p>
+    </div>
+</div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form class="p-4 border rounded-3 bg-light shadow-sm">
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Ваше Имя:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Сообщение:</label>
+                    <textarea id="message" name="message" rows="4" class="form-control" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
