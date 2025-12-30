@@ -64,7 +64,7 @@
                     localStorage.setItem('jwtToken', data.token);
 
                     // Перенаправление на защищенную страницу
-                    // window.location.href = '/admin/dashboard';
+                    window.location.href = '/dashboard';
                 } else {
                     messageDiv.className = 'alert alert-danger';
                     messageDiv.innerText = data.message || 'Ошибка входа. Проверьте учетные данные.';

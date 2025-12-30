@@ -57,13 +57,24 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // Вспомогательный метод: Извлечение токена из заголовка "Authorization: Bearer <token>"
+    // Вспомогательный метод: Извлечение токена из заголовка "Authorization: Bearer
+    // <token>"
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7); // Убираем "Bearer "
         }
+
+        // Также проверяем куки (для доступа к защищенным страницам через браузер)
+        if (request.getCookies() != null) {
+            for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
         return null;
     }
 }

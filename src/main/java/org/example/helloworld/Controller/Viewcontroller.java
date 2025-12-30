@@ -20,7 +20,9 @@ public class Viewcontroller {
     @GetMapping("/dashboard")
     public String showDashboard() {
         // Эта страница будет доступна только при наличии JWT в заголовке запроса,
+
         // если вы настроите AJAX-запрос с токеном.
+
         return "dashboard"; // Предполагается, что есть шаблон dashboard.html
     }
 }
